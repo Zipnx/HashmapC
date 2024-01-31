@@ -149,7 +149,94 @@ bool hashmap_set_sc(struct Hashmap* map, void* key, void* value){
 
 }
 
+struct HashEntry* _incr_free_empty_entries(struct HashEntry* start){
+    
+    struct HashEntry* final = NULL;
 
+    struct HashEntry* future_entry = NULL;
+
+    while (start != NULL){
+        
+        future_entry = start->next;
+
+        if (!is_entry_empty(start)){
+            final = start;
+            break;
+        } 
+        
+        DEBUG_PRNT("[_incr_free_empty_entries] [+] Wiped empty entry %p\n", start);
+        free(start);
+
+        
+        start = future_entry;
+    }
+    
+    return final;
+}
+
+void hashmap_prune_sc(struct Hashmap* map){
+    
+    // If the first entry is empty in a bucket it will be cleared up at the end
+    
+    DEBUG_PRNT("[hashmap_prune_sc] [*] Pruning map %p of entries marked empty\n", map);
+    
+    for (size_t bucketid = 0; bucketid < map->capacity; bucketid++){ 
+        
+        DEBUG_PRNT("[hashmap_prune_sc] [*] Pruning bucket %ld\n", bucketid);
+        
+        struct HashEntry* previous = NULL;
+        struct HashEntry* root = map->buckets[bucketid];
+        
+        while (root != NULL){
+
+            if (is_entry_empty(root)){
+
+                root = _incr_free_empty_entries(root);
+                
+                if (previous == NULL){
+                    map->buckets[bucketid] = root;
+                } else {
+                    previous->next = root;
+                }
+
+                continue;
+            }
+            
+            previous = root;
+            root = root->next;
+
+        }
+
+    }
+
+}
+
+void hashmap_clear_sc(struct Hashmap* map){
+
+    DEBUG_PRNT("[hashmap_clear_sc] [*] Clearing map %p.\n", map);
+
+    for (size_t bucketid = 0; bucketid < map->capacity; bucketid++){
+
+        struct HashEntry* start = map->buckets[bucketid];
+        struct HashEntry* future = NULL;
+
+        while (start != NULL){
+            
+            // Although the ->next could be accessed after it being freed
+            // there could be a race condition in concurrency
+            future = start->next;
+            free(start);
+            start = future;
+
+        }
+
+        map->buckets[bucketid] = NULL;
+
+    }
+    
+    DEBUG_PRNT("[hashmap_clear_sc] [+] %s\n", "Hashmap cleared.");
+
+}
 
 void _display_sc_hashmap(struct Hashmap* map){
 

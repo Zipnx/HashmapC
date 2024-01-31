@@ -20,6 +20,9 @@ struct Hashmap* hashmap_init(enum CollisionResType maptype, size_t bucketcount){
         map->get = hashmap_get_sc;
         map->del = hashmap_del_sc;
         map->exists = hashmap_key_exists_sc;
+        map->prune = hashmap_prune_sc;
+        map->clear = hashmap_clear_sc;
+
         break;
 
     case OPEN_ADDRESSING:

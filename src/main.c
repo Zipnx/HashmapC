@@ -7,7 +7,7 @@ int main(void){
 
     struct Hashmap* map = hashmap_init(SEPERATE_CHAINING, 8); 
     
-    /*
+    
     srand(1);
 
     int i;
@@ -26,13 +26,18 @@ int main(void){
 
     }
     printf("Ran %d map accesses.\n", i);
-    */
-
+    
+    map->del(map, (void*)0x30);
+    map->del(map, (void*)0);
+    map->del(map, (void*)0x1f);
 
     _display_sc_hashmap(map);
 
+    map->prune(map);
 
-    map->set(map, (void*)0x31, (void*)0x69420);
+    _display_sc_hashmap(map);
+
+    map->clear(map);
 
     _display_sc_hashmap(map);
 

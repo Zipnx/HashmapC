@@ -8,14 +8,14 @@ I'll probably forget this
 > [!IMPORTANT]
 > This is not in any way a serious implementation for a hashmap.
 > I wrote it in an afternoon to play around with, it's incomplete, and possibly insecure.
-> The map can't even be free'd (yet) and this is an uncommented mess.
+> Also this is an uncommented mess
 
 ## TODO:
 - [X] Seperate chaining functionality
 - [ ] Make this somewhat usable
 - [ ] Actual hashing ffs
-- [ ] Pruning entries flagged as deleted
-- [ ] Clearing the hashmap
+- [X] Pruning entries flagged as deleted
+- [X] Clearing the hashmap
 - [ ] Open addressing hash collision resolution
 
 ## Usage:

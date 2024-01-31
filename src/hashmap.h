@@ -38,6 +38,8 @@ struct Hashmap{
     void* (*get)(struct Hashmap*, void*);
     bool  (*del)(struct Hashmap*, void*);
     bool  (*exists)(struct Hashmap*, void*);
+    void  (*prune)(struct Hashmap*);
+    void  (*clear)(struct Hashmap*);
 
 };
 
