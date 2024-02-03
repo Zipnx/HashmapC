@@ -12,7 +12,8 @@ int main(void){
 
     _display_sc_hashmap(map);
 
-    map->set(map, (void*)0x5, (void*)0x1337);
+    map->set(map, (void*)0xd, (void*)0x1337);
+    map->set(map, (void*)0x11, (void*)0x360);
 
     _display_sc_hashmap(map);
 

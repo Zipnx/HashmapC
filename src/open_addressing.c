@@ -2,7 +2,6 @@
 #include "open_addressing.h"
 #include "hashmap.h"
 #include "seperate_chaining.h"
-#include <stdint.h>
 
 // This open addressing implementation is hardcoded to use linear probing
 
@@ -15,15 +14,13 @@ bool hashmap_set_oa(struct Hashmap* map, void* key, void* value){
     int iter = 0;
     struct HashEntry* current = _get_entry_from_hash(map, hashed);
    
-
-    // this comparison sucks, _is_key_match runs the hash function every iter, should
-    // just make another var (did this since hashed gets modified)
-    // Also the match function should be in hashmap.h
-    while ( current != NULL && !is_entry_empty(current) && !_is_key_match(map, current, key) ){
+    while ( current != NULL && 
+            !is_entry_empty(current) && 
+            !_is_key_match(map, current, key, hashed) ){
     
-        current = _get_entry_from_hash(map, ++hashed);
+        current = _get_entry_from_hash(map, hashed + (++iter));
 
-        if (++iter >= map->capacity){
+        if (iter >= map->capacity){
             
             DEBUG_PRNT("[hashmap_set_oa] [!] Map %p has no room left\n", map);
             return false;
@@ -32,19 +29,19 @@ bool hashmap_set_oa(struct Hashmap* map, void* key, void* value){
 
     }
 
-    DEBUG_PRNT("[hashmap_set_oa] [*] Selected bucket for key: %ld\n", hashed % map->capacity);
+    DEBUG_PRNT("[hashmap_set_oa] [*] Selected bucket for key: %ld\n", (hashed + iter) % map->capacity);
 
     if (current == NULL){
 
         DEBUG_PRNT("[hashmap_set_oa] [+] Creating new bucket entry for key %p\n", key)  ;
 
-        current = _init_hashentry(key, value, map->hash(key)); 
+        current = _init_hashentry(key, value, hashed); 
         
         if (current == NULL){
             return false;
         }
 
-        map->buckets[hashed % map->capacity] = current; // remember to change this if i make hashed not get changed
+        map->buckets[(hashed + iter) % map->capacity] = current;
         return true;
 
     } else if (is_entry_empty(current)){
@@ -53,9 +50,7 @@ bool hashmap_set_oa(struct Hashmap* map, void* key, void* value){
 
         current->key = key;
         current->value = value;
-        // hash is called so many fucking times, the moment im done with this junky
-        // implementation this shits getting optimized
-        current->keyhash = map->hash(key);
+        current->keyhash = hashed;
         current->flags &= 0xFE;
         
         return true;
@@ -65,7 +60,7 @@ bool hashmap_set_oa(struct Hashmap* map, void* key, void* value){
         DEBUG_PRNT("[hashmap_set_oa] [*] Replacing previous value %p = %p\n", current->key, current->value);
         
         current->value = value;
-        current->keyhash = map->hash(key);
+        current->keyhash = hashed;
 
         return true;
     }
@@ -111,9 +106,9 @@ struct HashEntry* _get_entry_from_hash(struct Hashmap* map, uint64_t hash){
     return map->buckets[hash % map->capacity];
 }
 
-bool _is_key_match(struct Hashmap* map, struct HashEntry* entry, void* key){
+bool _is_key_match(struct Hashmap* map, struct HashEntry* entry, void* key, uint64_t hashkey){
 
-    if (entry->keyhash == map->hash(key) &&
+    if (entry->keyhash == hashkey &&
         map->cmp(entry->key, key)){
         return true;
     }

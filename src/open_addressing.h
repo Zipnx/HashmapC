@@ -2,7 +2,6 @@
 #define OPEN_ADDRESSING_H
 
 #include "hashmap.h"
-#include <stdint.h>
 
 struct Hashmap;
 struct HashEntry;
@@ -16,6 +15,6 @@ void hashmap_prune_oa(struct Hashmap*);
 void hashmap_clear_oa(struct Hashmap*);
 
 struct HashEntry* _get_entry_from_hash(struct Hashmap* map, uint64_t hash); 
-bool _is_key_match(struct Hashmap* map, struct HashEntry* entry, void* key);
+bool _is_key_match(struct Hashmap* map, struct HashEntry* entry, void* key, uint64_t hashkey);
 
 #endif
