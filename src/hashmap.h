@@ -5,6 +5,7 @@
 #include "hashalgos.h"
 
 #include "seperate_chaining.h"
+#include "open_addressing.h"
 
 /* Definitions for function pointers */
 

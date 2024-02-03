@@ -1,13 +1,13 @@
 
-#include <stdio.h>
-
 #include "hashmap.h"
 
 int main(void){
 
-    struct Hashmap* map = hashmap_init(SEPERATE_CHAINING, 8); 
+    struct Hashmap* map = hashmap_init(OPEN_ADDRESSING, 8); 
     
-    
+    map->set(map, 0x1, 0x69);
+
+    /*    
     srand(1);
 
     int i;
@@ -26,20 +26,8 @@ int main(void){
 
     }
     printf("Ran %d map accesses.\n", i);
-    
-    map->del(map, (void*)0x30);
-    map->del(map, (void*)0);
-    map->del(map, (void*)0x1f);
+    */
 
-    _display_sc_hashmap(map);
-
-    map->prune(map);
-
-    _display_sc_hashmap(map);
-
-    map->clear(map);
-
-    _display_sc_hashmap(map);
 
     return 0;
 }

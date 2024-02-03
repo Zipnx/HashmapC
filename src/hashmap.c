@@ -1,5 +1,6 @@
 
 #include "hashmap.h"
+#include "open_addressing.h"
 
 struct Hashmap* hashmap_init(enum CollisionResType maptype, size_t bucketcount){
 
@@ -26,9 +27,16 @@ struct Hashmap* hashmap_init(enum CollisionResType maptype, size_t bucketcount){
         break;
 
     case OPEN_ADDRESSING:
-        DEBUG_PRNT("[hashmap_init] [!] %s\n", "Open addressing has not been implemented");
-        free(map);
-        return NULL;
+        //DEBUG_PRNT("[hashmap_init] [!] %s\n", "Open addressing has not been implemented");
+        
+        map->set = hashmap_set_oa;
+        map->get = hashmap_get_oa;
+        map->del = hashmap_del_oa;
+        map->exists = hashmap_key_exists_oa;
+        map->prune = hashmap_prune_oa;
+        map->clear = hashmap_prune_oa;
+
+        break;
 
     default:
         DEBUG_PRNT("[hashmap_init] [!] Invalid map type selected! (%d)\n", (int)maptype);
