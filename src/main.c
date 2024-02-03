@@ -1,11 +1,20 @@
 
 #include "hashmap.h"
+#include "seperate_chaining.h"
 
 int main(void){
 
-    struct Hashmap* map = hashmap_init(OPEN_ADDRESSING, 8); 
+    struct Hashmap* map = hashmap_init(OPEN_ADDRESSING, 4); 
     
-    map->set(map, 0x1, 0x69);
+    map->set(map, (void*)0x1, (void*)0x69);
+    map->set(map, (void*)0x5, (void*)0x420);
+    map->set(map, (void*)0x9, (void*)0x8008);
+
+    _display_sc_hashmap(map);
+
+    map->set(map, (void*)0x5, (void*)0x1337);
+
+    _display_sc_hashmap(map);
 
     /*    
     srand(1);
