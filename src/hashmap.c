@@ -1,6 +1,7 @@
 
 #include "hashmap.h"
 #include "open_addressing.h"
+#include "seperate_chaining.h"
 
 struct Hashmap* hashmap_init(enum CollisionResType maptype, size_t bucketcount){
 

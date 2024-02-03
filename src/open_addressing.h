@@ -1,10 +1,10 @@
 #ifndef OPEN_ADDRESSING_H
 #define OPEN_ADDRESSING_H
 
-#include "hashmap.h"
+#include <stdbool.h>
+#include <stdint.h>
 
-struct Hashmap;
-struct HashEntry;
+#include "hashmap.h"
 
 bool hashmap_set_oa(struct Hashmap* map, void* key, void* value);
 void* hashmap_get_oa(struct Hashmap* map, void* key);

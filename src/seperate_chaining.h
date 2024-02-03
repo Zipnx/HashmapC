@@ -3,8 +3,8 @@
 
 #include "hashmap.h"
 
-struct Hashmap;
-struct HashEntry;
+#include <stdbool.h>
+#include <stdint.h>
 
 bool hashmap_set_sc(struct Hashmap* map, void* key, void* value);
 void* hashmap_get_sc(struct Hashmap* map, void* key);

@@ -1,7 +1,5 @@
 
 #include "open_addressing.h"
-#include "hashmap.h"
-#include "seperate_chaining.h"
 
 // This open addressing implementation is hardcoded to use linear probing
 
