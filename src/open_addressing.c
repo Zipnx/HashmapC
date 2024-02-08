@@ -1,5 +1,6 @@
 
 #include "open_addressing.h"
+#include "hashmap.h"
 
 // This open addressing implementation is hardcoded to use linear probing
 
@@ -9,7 +10,7 @@ bool hashmap_set_oa(struct Hashmap* map, void* key, void* value){
     
     DEBUG_PRNT("[hashmap_set_oa] [*] Call to set %p = %p\n", key, value);
  
-    int iter = 0;
+    size_t iter = 0;
     struct HashEntry* current = _get_entry_from_hash(map, hashed);
    
     while ( current != NULL && 
@@ -67,9 +68,9 @@ bool hashmap_set_oa(struct Hashmap* map, void* key, void* value){
 
 void* hashmap_get_oa(struct Hashmap* map, void* key){
 
-    DEBUG_PRNT("[hashmap_get_oa] [!] %s\n", "OA Get unimplemented");
+    struct HashEntry* entry = _find_entry(map, key);
 
-    return NULL;
+    return (entry == NULL) ? NULL : entry->value;
 }
 
 bool hashmap_del_oa(struct Hashmap *map, void *key){
@@ -81,8 +82,9 @@ bool hashmap_del_oa(struct Hashmap *map, void *key){
 
 bool hashmap_key_exists_oa(struct Hashmap *map, void *key){
 
-    DEBUG_PRNT("[hashmap_key_exists_oa] [!] %s\n", "OA Key exists unimplemented");
-    return false;
+    DEBUG_PRNT("[hashmap_key_exists_oa] [*] Checking if key %p exists\n", key);
+
+    return _find_entry(map, key) != NULL;
 
 }
 
@@ -97,6 +99,37 @@ void hashmap_clear_oa(struct Hashmap *map){
 
     DEBUG_PRNT("[hashmap_clear_oa] [!] %s\n", "OA Clear unimplemented");
     return;
+
+}
+
+struct HashEntry* _find_entry(struct Hashmap *map, void *key){
+
+    uint64_t hashed = map->hash(key);
+    
+    DEBUG_PRNT("[_find_entry] [*] Searching for entry %p\n", key) ;
+
+    struct HashEntry* cur = _get_entry_from_hash(map, hashed);
+    size_t iter = 0;
+
+    while (cur != NULL &&
+           (is_entry_empty(cur) ||
+           !_is_key_match(map, cur, key, hashed))){
+        
+        
+        cur = _get_entry_from_hash(map, hashed + (++iter));
+        
+        if (iter >= map->capacity) {
+            DEBUG_PRNT("[_find_entry] [*] Search for %p exhausted\n", key);
+            return NULL;
+        }
+
+    }
+
+    if (cur == NULL) return NULL;
+
+    DEBUG_PRNT("[_find_entry] [+] Found entry for key %p : %p\n", key, cur);
+
+    return cur;
 
 }
 
