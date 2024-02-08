@@ -75,7 +75,15 @@ void* hashmap_get_oa(struct Hashmap* map, void* key){
 
 bool hashmap_del_oa(struct Hashmap *map, void *key){
 
-    DEBUG_PRNT("[hashmap_del_oa] [!] %s\n", "OA Del unimplemented");
+    DEBUG_PRNT("[hashmap_del_oa] [*] Call to delete %p\n", key);
+
+    struct HashEntry* entry = _find_entry(map, key);
+
+    if (entry == NULL) return false;
+
+    entry->flags |= 1;
+    DEBUG_PRNT("[hashmap_del_oa] [+] Key %p (%p) marked as deleted.\n", key, entry);
+
     return false;
 
 }
@@ -97,7 +105,15 @@ void hashmap_prune_oa(struct Hashmap *map){
 
 void hashmap_clear_oa(struct Hashmap *map){
 
-    DEBUG_PRNT("[hashmap_clear_oa] [!] %s\n", "OA Clear unimplemented");
+    DEBUG_PRNT("[hashmap_clear_oa] [*] Call to clear OA hashmap: %p\n", map);
+
+    for (size_t i = 0; i < map->capacity; i++){
+        free(map->buckets[i]);
+        map->buckets[i] = NULL;
+    }
+
+    DEBUG_PRNT("[hashmap_clear_oa] [+] Map %p cleared.\n", map);
+
     return;
 
 }

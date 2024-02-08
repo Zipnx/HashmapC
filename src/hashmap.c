@@ -35,7 +35,7 @@ struct Hashmap* hashmap_init(enum CollisionResType maptype, size_t bucketcount){
         map->del = hashmap_del_oa;
         map->exists = hashmap_key_exists_oa;
         map->prune = hashmap_prune_oa;
-        map->clear = hashmap_prune_oa;
+        map->clear = hashmap_clear_oa;
 
         break;
 

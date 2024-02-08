@@ -11,12 +11,15 @@ I'll probably forget this
 > Also this is an uncommented mess
 
 ## TODO:
-- [X] Seperate chaining functionality
+- [x] Seperate chaining functionality
 - [ ] Make this somewhat usable
 - [ ] Actual hashing ffs
-- [X] Pruning entries flagged as deleted
-- [X] Clearing the hashmap
-- [ ] Open addressing hash collision resolution
+- [x] Pruning entries flagged as deleted
+- [x] Clearing the hashmap
+- [x] Open addressing hash collision resolution
+- [ ] Check for bugs (that most likely exist)
+- [ ] Open addressing prune, clear
+- [ ] Resize function
 
 ## Usage:
 To add to a project just copy over the source files manually except main.c

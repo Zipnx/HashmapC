@@ -16,9 +16,19 @@ int main(void){
     map->set(map, (void*)0x11, (void*)0x360);
 
     _display_sc_hashmap(map);
-   
-    printf("Exists: %d\n", map->exists(map, (void*)0x1));
-    printf("Got: %p\n", map->get(map, (void*)0x17));
+     
+    map->del(map, (void*)0x5);
+
+    printf("Exists: %d\n", map->exists(map, (void*)0x5));
+    _display_sc_hashmap(map);
+    
+    map->set(map, (void*)0x15, (void*)0x6969);
+    
+    _display_sc_hashmap(map); 
+    
+    map->clear(map);
+
+    _display_sc_hashmap(map);
 
     /*    
     srand(1);
